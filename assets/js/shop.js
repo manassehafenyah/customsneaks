@@ -17,22 +17,38 @@ const SHOP = {
   phone: SETTINGS.phone
 };
 
+const CATEGORY_LABELS = {
+  custom: "Customs", af1: "Air Force 1", jordan: "Jordan",
+  dunk: "Dunk", airmax: "Air Max", other: "Other"
+};
+
+const slug = t => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const strip = u => String(u || "").replace(/^\//, "");
+
 const PRODUCTS = (CATALOGUE.products || [])
   .filter(p => p.visible !== false)
-  .map(p => ({
-    id: p.id,
-    family: p.category,
-    fam: p.categoryLabel,
-    name: p.name,
-    sub: p.colorway,
-    code: p.styleCode,
-    year: p.year,
-    cond: p.condition,
-    price: Number(p.price) || 0,
-    flag: p.badge || "",
-    image: (p.image || "").replace(/^\//, ""),
-    sizes: (p.sizes || []).map(us => ({ us: String(us), sold_out: false }))
-  }));
+  .map((p, i) => {
+    const d = p.details || {};
+    const images = (p.images || [])
+      .map(x => strip(typeof x === "string" ? x : x && x.src))
+      .filter(Boolean);
+    return {
+      id: slug(p.name + "-" + (p.colorway || "")) || "pair-" + i,
+      family: p.category || "other",
+      fam: CATEGORY_LABELS[p.category] || "Other",
+      name: p.name || "",
+      sub: p.colorway || "",
+      code: d.styleCode || "",
+      year: d.year || "",
+      cond: d.condition || "",
+      price: Number(p.price) || 0,
+      flag: p.badge || "",
+      images,
+      image: images[0] || "",
+      video: strip(p.video),
+      sizes: (p.sizes || []).map(String)
+    };
+  });
 
 const DATA = { drop_at: SETTINGS.dropAt || "", ticker: SETTINGS.ticker || [] };
 
@@ -101,9 +117,30 @@ tick(); setInterval(tick, 1000);
 /* ---------- grid ---------- */
 let filter = "all", sort = "new";
 function shotHTML(p){
-  if (p.image) return '<img src="' + p.image + '" alt="' + p.name + ' ' + p.sub + '">';
-  return '<div class="slot"><code>image: "' + p.id + '"</code><em>drop your photo here</em></div>';
+  if (p.image) return '<img src="' + p.image + '" alt="' + p.name + ' ' + p.sub + '" loading="lazy">';
+  return '<div class="slot"><em>photo coming soon</em></div>';
 }
+function mediaHTML(p){
+  const slides = [
+    ...p.images.map(src => '<img class="slide" src="' + src + '" alt="' + p.name + ' ' + p.sub + '">'),
+    ...(p.video ? ['<video class="slide" src="' + p.video + '" controls playsinline preload="metadata"></video>'] : [])
+  ];
+  if (!slides.length) return '<div class="slot"><em>photo coming soon</em></div>';
+
+  const thumbs = slides.length > 1
+    ? '<div class="thumbs">' + slides.map((_, i) =>
+        '<button class="thumb' + (i === 0 ? ' on' : '') + '" data-slide="' + i + '" aria-label="View ' +
+        (p.video && i === slides.length - 1 ? 'clip' : 'photo ' + (i + 1)) + '">' +
+        (p.video && i === slides.length - 1
+          ? '<span class="thumb__play">▶</span>'
+          : '<img src="' + p.images[i] + '" alt="">') +
+        '</button>').join("") + '</div>'
+    : "";
+
+  return '<div class="slides">' + slides.map((html, i) =>
+    '<div class="slide-wrap' + (i === 0 ? ' on' : '') + '">' + html + '</div>').join("") + '</div>' + thumbs;
+}
+
 function render(){
   let list = PRODUCTS
     .filter(p => p.visible !== false)                       // hide without deleting
@@ -111,11 +148,15 @@ function render(){
   if (sort === "low") list = [...list].sort((a,b) => a.price - b.price);
   if (sort === "high") list = [...list].sort((a,b) => b.price - a.price);
   const grid = $("#grid");
-  if (!list.length){ grid.innerHTML = '<p class="empty">Nothing in that category right now — check back after Friday\'s drop.</p>'; return; }
+  if (!list.length){ grid.innerHTML = PRODUCTS.length
+      ? '<p class="empty">Nothing in that category right now.</p>'
+      : '<p class="empty">The vault is being restocked. New pairs land here shortly — message us on WhatsApp for what\'s in hand today.</p>';
+    return; }
   grid.innerHTML = list.map(p => `
     <article class="card">
       <div class="card__shot">
         ${p.flag ? '<span class="chip card__flag">' + p.flag + '</span>' : ''}
+        ${(p.images.length > 1 || p.video) ? '<span class="card__more">' + (p.video ? '▶ ' : '') + (p.images.length || 1) + '</span>' : ''}
         ${shotHTML(p)}
       </div>
       <div class="card__body">
@@ -152,7 +193,7 @@ function openModal(id){
   const p = PRODUCTS.find(x => x.id === id);
   if (!p) return;
   current = p; pickedSize = null; lastFocus = document.activeElement;
-  $("#modalShot").innerHTML = shotHTML(p);
+  $("#modalShot").innerHTML = mediaHTML(p);
   $("#modalFamily").textContent = p.fam;
   $("#modalName").textContent = p.name;
   $("#modalSub").textContent = p.sub;
@@ -179,10 +220,22 @@ $("#modalSizes").addEventListener("click", e => {
   $("#modalAdd").disabled = false;
 });
 function closeModal(){
+  const v = $("#modalShot").querySelector("video");
+  if (v) v.pause();
   $("#modal").classList.remove("on");
   if (!$("#drawer").classList.contains("on")) $("#scrim").classList.remove("on");
   if (lastFocus) lastFocus.focus();
 }
+$("#modalShot").addEventListener("click", e => {
+  const t = e.target.closest(".thumb");
+  if (!t) return;
+  const i = Number(t.dataset.slide);
+  $("#modalShot").querySelectorAll(".slide-wrap").forEach((w, n) => w.classList.toggle("on", n === i));
+  $("#modalShot").querySelectorAll(".thumb").forEach((b, n) => b.classList.toggle("on", n === i));
+  const v = $("#modalShot").querySelector("video");
+  if (v && !v.paused) v.pause();
+});
+
 $("#closeModal").addEventListener("click", closeModal);
 
 /* ---------- cart ---------- */
