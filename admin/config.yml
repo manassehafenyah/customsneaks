@@ -8,7 +8,7 @@ backend:
   name: github
   repo: manassehafenyah/customsneaks     # CHANGE ME if the repo name differs
   branch: main
-  base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev   # CHANGE ME
+  base_url: https://sveltia-cms-auth.manassehafenyah.workers.dev   # CHANGE ME
 
 # Where uploaded photos land, and how the shop refers to them
 media_folder: assets/img
