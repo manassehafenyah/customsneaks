@@ -1,131 +1,160 @@
 # CustomSneaks GH
 
-The shop. Plain HTML, CSS and JavaScript — no build step, no framework, nothing
-to install. Cloudflare Pages serves these files exactly as they are.
+Static shop with a real admin at `/admin`. No server, no database, no Node.
+Cloudflare Pages serves the files; the admin writes changes straight back into
+this repository and Cloudflare redeploys.
 
 ```
-index.html              the page
-favicon.svg             the tab icon
-_headers                caching rules for Cloudflare
-assets/css/site.css     all the styling
-assets/js/products.js   ← the only file you edit day to day
-assets/js/shop.js       cart, filters, quick view, WhatsApp links
-assets/img/             product photos
+index.html              the shop
+admin/                  the admin portal (Sveltia CMS)
+data/products.json      every pair — written by the admin
+data/settings.json      contact, drop, front-page copy — written by the admin
+assets/img/             product photos — uploaded through the admin
+assets/css/site.css     styling
+assets/js/shop.js       cart, filters, WhatsApp links
+_headers                Cloudflare caching rules
 ```
+
+You edit **nothing by hand** once this is set up. Everything goes through
+`customsneaksgh.urbanstudioz.com/admin`.
 
 ---
 
-## Part 1 — put it on GitHub
+## Part 1 — repo and site (do this first)
 
-You only do this once.
+1. **GitHub** → new repository named `customsneaks`, public, no README.
+   Then **uploading an existing file** and drag in everything from this folder,
+   folders included. Commit.
 
-1. Sign up at [github.com](https://github.com) if you haven't.
-2. Click **+** (top right) → **New repository**. Name it `customsneaks`. Leave it
-   **Public** (Cloudflare's free plan works either way, public is simpler).
-   Don't tick "Add a README" — this folder already has one.
-3. On the empty repository page, click **uploading an existing file**.
-4. Drag in **everything from this folder**, keeping the folder structure —
-   `index.html`, `favicon.svg`, `_headers`, and the whole `assets` folder.
-   GitHub keeps the folders as long as you drag the folders themselves rather
-   than opening them first.
-5. Click **Commit changes**.
-
-## Part 2 — connect Cloudflare
-
-1. Sign up at [dash.cloudflare.com](https://dash.cloudflare.com) — you likely
-   already have an account, since your DNS is there.
-2. Left sidebar → **Workers & Pages** → **Create** → **Pages** tab →
-   **Connect to Git**.
-3. Authorise GitHub, pick the `customsneaks` repository, click **Begin setup**.
-4. Build settings — this is the part people get wrong:
+2. **Cloudflare → Workers & Pages → Create application → Pages → Connect to Git**,
+   pick `customsneaks`.
 
    | Field | Value |
    |---|---|
-   | Framework preset | **None** |
-   | Build command | **leave completely empty** |
-   | Build output directory | **/** (just a slash) |
+   | Framework preset | None |
+   | Build command | *leave empty* |
+   | Build output directory | `/` |
 
-   There's no build step. If you put anything in the build command it will fail.
-5. **Save and Deploy.** About a minute later you get a live URL like
-   `customsneaks.pages.dev`. Open it and check the shop looks right.
+3. **Save and Deploy.** Check the `.pages.dev` URL shows the shop.
 
-## Part 3 — put it on your own domain
+4. **Custom domains → Set up a custom domain →** `customsneaksgh.urbanstudioz.com`
+   → Activate. Cloudflare adds the DNS record itself.
 
-1. In your new Pages project → **Custom domains** → **Set up a custom domain**.
-2. Enter `customsneaks.urbanstudioz.com` → **Continue** → **Activate domain**.
-
-Because `urbanstudioz.com` is already on Cloudflare, it adds the DNS record and
-issues the certificate itself. Nothing to do at your registrar, and nothing on
-cPanel changes — `urbanstudioz.com` stays exactly where it is. Give it a few
-minutes, then visit `https://customsneaks.urbanstudioz.com`.
+The shop is now live. The admin needs three more steps, once.
 
 ---
 
-## Updating the shop
+## Part 2 — turning on the admin
 
-This is the part you'll do often, and it's all on github.com — no software on
-your computer.
+The admin runs entirely in your browser, but signing in with GitHub needs a tiny
+relay in the middle. Cloudflare runs it free. You do this once and never again.
 
-### Change a price, or add a pair
+### 2a. Deploy the sign-in Worker
 
-1. Go to your repository → `assets` → `js` → **products.js**
-2. Click the **pencil icon** (top right of the file)
-3. Edit the line you want
-4. Scroll down, click **Commit changes**
+Open **https://github.com/sveltia/sveltia-cms-auth** and click the
+**Deploy to Cloudflare Workers** button in the README. Sign in, accept the
+defaults.
 
-Cloudflare rebuilds automatically. Refresh the shop about 30 seconds later.
+When it finishes, copy the Worker's URL. It looks like:
 
-Each pair is one line. To add one, copy an existing line, paste it below, and
-change the details:
-
-```js
-{ id:"aj1-unc", family:"jordan", fam:"Jordan", name:"Air Jordan 1 High OG",
-  sub:"University Blue", code:"555088-134", year:"2021", cond:"Deadstock",
-  price:6800, sizes:[8,9,10,11], flag:"", image:"assets/img/unc.jpg" },
+```
+https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
 ```
 
-- **price** is in cedis, no commas, no GH₵ — just `6800`
-- **sizes** is the list of US sizes you have; remove one when it sells
-- **flag** is the corner badge — `"Grail"`, `"1 of 1"`, `""` for none
-- **image** points at a file in `assets/img/`. Leave it `""` and the card shows
-  a labelled placeholder instead
-- **family** and **fam** control the filter buttons. Reuse an existing pair's
-  values to file it under the same category, or invent a new one and a new
-  filter button appears by itself
+### 2b. Register a GitHub OAuth app
 
-Keep every comma and quote mark exactly where it is. If the shop goes blank
-after an edit, you removed one — undo by opening the file's **History** and
-reverting the last commit.
+Go to **https://github.com/settings/applications/new**
 
-### Add a photo
+| Field | Value |
+|---|---|
+| Application name | `CustomSneaks Admin` |
+| Homepage URL | `https://customsneaksgh.urbanstudioz.com` |
+| Authorization callback URL | `<your Worker URL>/callback` |
 
-1. Repository → `assets` → `img` → **Add file** → **Upload files**
-2. Drag the photo in, click **Commit changes**
-3. Edit `products.js` and point the pair at it:
-   `image:"assets/img/whatever-you-named-it.jpg"`
+The callback URL must end in `/callback`. Register, then copy the **Client ID**,
+and click **Generate a new client secret** and copy that too. The secret is shown
+once — if you lose it, generate another.
 
-Shrink big photos first — anything over about 1 MB slows the shop down badly on
-mobile data. [squoosh.app](https://squoosh.app) does it in the browser: drop the
-photo in, drag quality to about 80, download. Landscape shots crop best.
+### 2c. Give the Worker the keys
 
-### Change your WhatsApp number, or the words on the page
+Cloudflare → **Workers & Pages** → the `sveltia-cms-auth` worker →
+**Settings → Variables and Secrets**. Add:
 
-Top of `products.js` for the number and phone. The headline, intro and the three
-authentication steps are in `index.html` — same pencil-icon routine.
+| Name | Value | Type |
+|---|---|---|
+| `GITHUB_CLIENT_ID` | your Client ID | Text |
+| `GITHUB_CLIENT_SECRET` | your client secret | **Secret / encrypted** |
+| `ALLOWED_DOMAINS` | `customsneaksgh.urbanstudioz.com` | Text |
+
+Save and deploy.
+
+`ALLOWED_DOMAINS` matters — without it, anyone who finds your Worker URL can use
+it to start a sign-in flow. With it, only your own site can.
+
+### 2d. Point the admin at both
+
+Edit `admin/config.yml` in your repo (pencil icon on GitHub) and fix the two
+lines marked `CHANGE ME`:
+
+```yaml
+backend:
+  name: github
+  repo: manassehafenyah/customsneaks                              # your repo
+  branch: main
+  base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev   # your Worker
+```
+
+Commit. Wait for the deploy, then open
+**customsneaksgh.urbanstudioz.com/admin** and click **Sign in with GitHub**.
 
 ---
 
-## What still needs doing
+## Using the admin
 
-The `SHOP` block at the top of `products.js` has a **placeholder WhatsApp
-number**. Until you change it, the order button opens a chat with nobody.
+**Products → The vault** is the list of every pair. Click one to open it, or
+**Add pair** at the top. Drag rows to reorder — top of the list shows first on
+the shop.
 
-```js
-const SHOP = {
-  name: "CustomSneaks GH",
-  whatsapp: "233000000000",   // digits only, country code, no + or spaces
-  phone: "+233 00 000 0000"
-};
-```
+Per pair: model, colorway, photo, price, sizes, category, style code, year,
+condition, badge, and a **Show on the shop** switch for hiding a pair without
+deleting it.
 
-Prices are my estimates, not yours. Check every one.
+- **Price** is cedis, digits only. The shop adds the GH₵ and the comma.
+- **Sizes** is one row per US size. Delete a row when that size sells.
+- **Photo** — drag it in. It uploads to `assets/img/` and is committed with your
+  change. Shrink anything over about 1 MB first ([squoosh.app](https://squoosh.app),
+  quality 80) — big photos are slow on mobile data. Landscape crops best.
+
+**Shop settings** holds your WhatsApp number, phone, the front-page headline and
+intro, the next drop and its countdown, the delivery note, and the ticker lines.
+
+Every save is a commit to this repo, so Cloudflare rebuilds automatically —
+about 30 seconds, then refresh the shop. Nothing is ever lost: GitHub keeps the
+full history, and any change can be reverted from the repo's **History**.
+
+---
+
+## Who can get in
+
+Anyone with **write access to the GitHub repository**. That's you, and anyone
+you explicitly add under **Settings → Collaborators**. The `/admin` page itself
+is public — that's fine and normal, because it's an empty shell until GitHub
+authenticates you. Without repo write access, signing in gets you nowhere.
+
+To hand access to someone, add them as a collaborator on the repo. To take it
+away, remove them.
+
+---
+
+## Editing by hand, if you ever need to
+
+The admin is a friendlier face on two plain files: `data/products.json` and
+`data/settings.json`. You can edit either directly on GitHub if the admin is
+ever unavailable. If a hand edit breaks the JSON the shop will go blank — open
+the file's **History** and revert.
+
+---
+
+## Still to do
+
+Prices in `data/products.json` are estimates, not yours. Check every one.

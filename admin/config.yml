@@ -1,0 +1,123 @@
+# CustomSneaks GH — admin configuration
+#
+# Two things to fill in before this works, both marked CHANGE ME:
+#   repo      — your GitHub username / repository name
+#   base_url  — the Cloudflare Worker that signs you in (see README)
+
+backend:
+  name: github
+  repo: manassehafenyah/customsneaks     # CHANGE ME if the repo name differs
+  branch: main
+  base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev   # CHANGE ME
+
+# Where uploaded photos land, and how the shop refers to them
+media_folder: assets/img
+public_folder: /assets/img
+
+collections:
+  # ------------------------------------------------------------------
+  - name: products
+    label: Products
+    files:
+      - name: catalogue
+        label: The vault
+        file: data/products.json
+        description: Every pair on the shop. Drag to reorder — the top of the list shows first.
+        fields:
+          - name: products
+            label: Pairs
+            label_singular: pair
+            widget: list
+            summary: "{{fields.name}} — {{fields.colorway}}  ·  GH₵{{fields.price}}"
+            collapsed: true
+            fields:
+              - { name: name, label: Model, widget: string, hint: "Air Force 1 '07" }
+              - { name: colorway, label: Colorway, widget: string, hint: "Triple White", required: false }
+              - name: image
+                label: Photo
+                widget: image
+                required: false
+                hint: Landscape crops best. Leave empty for a placeholder card.
+              - name: price
+                label: Price (GH₵)
+                widget: number
+                value_type: int
+                min: 0
+                hint: Digits only — the shop adds the GH₵ and the comma.
+              - name: sizes
+                label: Sizes in stock (US)
+                widget: list
+                required: false
+                hint: One size per row. Remove a row when that size sells.
+                field: { name: size, label: US size, widget: string }
+              - name: visible
+                label: Show on the shop
+                widget: boolean
+                default: true
+                hint: Turn off to hide a pair without deleting it.
+              - name: category
+                label: Filter category
+                widget: select
+                default: custom
+                options:
+                  - { label: Customs, value: custom }
+                  - { label: Air Force 1, value: af1 }
+                  - { label: Jordan, value: jordan }
+                  - { label: Dunk, value: dunk }
+                  - { label: Air Max, value: airmax }
+              - name: categoryLabel
+                label: Category button text
+                widget: string
+                default: Customs
+                hint: What the filter button says. Must match the others in the same category.
+              - { name: styleCode, label: Style code, widget: string, required: false, hint: "CW2288-111" }
+              - { name: year, label: Release year, widget: string, required: false }
+              - { name: condition, label: Condition, widget: string, required: false, default: Deadstock }
+              - name: badge
+                label: Corner badge
+                widget: string
+                required: false
+                hint: "Grail, 1 of 1, Drop — leave empty for none."
+              - name: id
+                label: Internal tag
+                widget: string
+                hint: Short, unique, no spaces. Never shown to customers.
+
+  # ------------------------------------------------------------------
+  - name: settings
+    label: Shop settings
+    files:
+      - name: shop
+        label: Contact, drop & front page
+        file: data/settings.json
+        fields:
+          - { name: shopName, label: Shop name, widget: string }
+          - { name: tagline, label: Tagline (browser tab), widget: string, required: false }
+          - name: whatsapp
+            label: WhatsApp number
+            widget: string
+            pattern: ['^[0-9]{9,15}$', 'Digits only, with country code — e.g. 233244906925']
+            hint: Digits only, country code included. No + and no spaces.
+          - { name: phone, label: Phone number (for calls), widget: string, hint: "+233 24 490 6925" }
+
+          - { name: heroEyebrow, label: Small line above the headline, widget: string }
+          - { name: heroLine1, label: Headline — first line, widget: string }
+          - { name: heroLine2, label: Headline — coloured line, widget: string }
+          - { name: heroLede, label: Intro paragraph, widget: text }
+
+          - { name: dropName, label: Next drop — headline, widget: string, required: false }
+          - { name: dropSub, label: Next drop — details line, widget: string, required: false }
+          - { name: dropPairs, label: Next drop — number of pairs, widget: string, required: false }
+          - name: dropAt
+            label: Countdown target
+            widget: datetime
+            required: false
+            hint: Leave empty and the clock counts down to the next Friday at noon.
+
+          - { name: deliveryNote, label: Delivery note (shown in the cart), widget: text }
+          - { name: footerNote, label: Footer line, widget: string }
+          - name: ticker
+            label: Ticker messages
+            widget: list
+            hint: The lines that scroll across the top of the shop.
+            field: { name: line, label: Message, widget: string }
