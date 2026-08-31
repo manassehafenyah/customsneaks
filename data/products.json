@@ -16,7 +16,11 @@
       "category": "sneakers",
       "visible": true,
       "badge": "Grail",
-      "details": null
+      "details": {
+        "condition": "Brand New",
+        "styleCode": "Above-ankle luxury sneaker",
+        "year": "2024"
+      }
     }
   ]
 }
