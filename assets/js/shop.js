@@ -314,6 +314,7 @@ function closeModal(){
   if (v) v.pause();
   $("#modal").classList.remove("on");
   if (!$("#drawer").classList.contains("on")) $("#scrim").classList.remove("on");
+  if (!$("#drawer").classList.contains("on")) $("#scrim").classList.remove("on");
   if (lastFocus) lastFocus.focus();
 }
 $("#modalShot").addEventListener("click", e => {
@@ -401,10 +402,11 @@ function toast(msg){
 
 $("#modalAdd").addEventListener("click", () => {
   if (!current || !pickedSize) return;
+  const added = current.name + " · " + sizeLabel(pickedSize).toLowerCase() + " added";
   cart.push({ id: current.id, size: pickedSize });
-  drawCart();
-  toast(current.name + " · " + sizeLabel(pickedSize).toLowerCase() + " added");
-  closeModal();
+  // the panel must close even if drawing the cart hits a problem, otherwise
+  // the dark overlay stays up and the page looks frozen
+  try { drawCart(); toast(added); } finally { closeModal(); }
 });
 
 function openCart(){

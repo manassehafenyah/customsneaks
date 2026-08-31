@@ -1,7 +1,17 @@
-# Cloudflare Pages reads this file. Long cache for assets, short for the page
-# itself so edits show up straight away.
-/assets/*
+# Cloudflare Pages reads this file.
+#
+# Photos keep their long cache — the admin gives every upload a new filename.
+# Code does NOT: shop.js and site.css are overwritten in place, so they must be
+# re-checked on every visit. Caching them "immutable" leaves browsers running
+# last month's JavaScript against this month's HTML.
+/assets/img/*
   Cache-Control: public, max-age=31536000, immutable
+
+/assets/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/css/*
+  Cache-Control: public, max-age=0, must-revalidate
 
 /data/*
   Cache-Control: public, max-age=0, must-revalidate
