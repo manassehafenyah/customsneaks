@@ -27,14 +27,17 @@ const CATEGORY_LABELS = {
 
 const slug = t => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const strip = u => String(u || "").replace(/^\//, "");
+// a CMS list can arrive as ["a","b"] or [{src:"a"},{line:"b"}] — take either
+const flat = v => (Array.isArray(v) ? v : [])
+  .map(x => (x && typeof x === "object") ? (x.src ?? x.line ?? x.size ?? Object.values(x)[0]) : x)
+  .filter(x => x !== undefined && x !== null && x !== "")
+  .map(String);
 
 const PRODUCTS = (CATALOGUE.products || [])
   .filter(p => p.visible !== false)
   .map((p, i) => {
     const d = p.details || {};
-    const images = (p.images || [])
-      .map(x => strip(typeof x === "string" ? x : x && x.src))
-      .filter(Boolean);
+    const images = flat(p.images).map(strip).filter(Boolean);
     return {
       id: slug(p.name + "-" + (p.colorway || "")) || "pair-" + i,
       family: p.category || "other",
@@ -51,11 +54,11 @@ const PRODUCTS = (CATALOGUE.products || [])
       video: strip(p.video),
       // footwear and clothing sizes come from separate tick-lists;
       // `sizes` is the older single list, kept so nothing breaks
-      sizes: [...(p.shoeSizes || []), ...(p.apparelSizes || []), ...(p.sizes || [])].map(String)
+      sizes: [...flat(p.shoeSizes), ...flat(p.apparelSizes), ...flat(p.sizes)]
     };
   });
 
-const DATA = { drop_at: SETTINGS.dropAt || "", ticker: SETTINGS.ticker || [] };
+const DATA = { drop_at: SETTINGS.dropAt || "", ticker: flat(SETTINGS.ticker) };
 
 /* settings-driven text on the page */
 document.title = SETTINGS.shopName + (SETTINGS.tagline ? " — " + SETTINGS.tagline : "");
@@ -88,14 +91,14 @@ const sizeLabel = z => /^one size$/i.test(z) ? "One size" : "Size " + z;
 /* ---------- whatsapp + call ---------- */
 const waLink = msg => "https://wa.me/" + SHOP.whatsapp + "?text=" + encodeURIComponent(msg);
 const telLink = "tel:" + SHOP.phone.replace(/[^\d+]/g, "");
-const generalMsg = "Hi " + SHOP.name + " — I have a question about a pair.";
+const generalMsg = "Hi " + SHOP.name + " — I have a question about an item.";
 $("#waFloat").href = waLink(generalMsg);
 $("#footWa").href = waLink(generalMsg);
 $("#footCall").href = telLink;
 $("#callBtn").href = telLink;
 
 /* ---------- ticker ---------- */
-const items = ["Jordan 1 Low OG \"Floral Denim\" — Friday 12:00 GMT","Same-day delivery in Accra & Tema","MTN MoMo · Telecel Cash · AT Money · bank transfer","Free delivery nationwide over GH₵5,000","Every pair checked in Osu before it ships","Cash on delivery inside Accra","14-day returns, unworn"];
+const items = DATA.ticker.length ? DATA.ticker : ["Order on WhatsApp or call"];
 $("#ticker").innerHTML = [...items, ...items].map(t => "<span>" + t + "</span>").join("");
 
 /* ---------- countdown to next Friday 12:00 ---------- */
@@ -107,10 +110,17 @@ function nextFriday(){
   d.setDate(d.getDate() + add);
   return d;
 }
-let target = nextFriday();
+function dropTarget(){
+  if (DATA.drop_at){
+    const d = new Date(DATA.drop_at);
+    if (!isNaN(d) && d > Date.now()) return d;
+  }
+  return nextFriday();
+}
+let target = dropTarget();
 function tick(){
   let ms = target - Date.now();
-  if (ms <= 0){ target = nextFriday(); ms = target - Date.now(); }
+  if (ms <= 0){ target = dropTarget(); ms = target - Date.now(); }
   const s = Math.floor(ms/1000);
   const p = n => String(n).padStart(2,"0");
   $("#cd").textContent = p(Math.floor(s/86400));
@@ -156,7 +166,7 @@ function render(){
   const grid = $("#grid");
   if (!list.length){ grid.innerHTML = PRODUCTS.length
       ? '<p class="empty">Nothing in that category right now.</p>'
-      : '<p class="empty">The vault is being restocked. New pairs land here shortly — message us on WhatsApp for what\'s in hand today.</p>';
+      : '<p class="empty">The vault is being restocked. New stock lands here shortly — message us on WhatsApp for what\'s in hand today.</p>';
     return; }
   grid.innerHTML = list.map(p => `
     <article class="card">

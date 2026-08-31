@@ -6,11 +6,10 @@
   "heroEyebrow": "Osu, Accra · delivered to all 16 regions",
   "heroLine1": "Grails only.",
   "heroLine2": "No fakes.",
-  "heroLede": "CustomSneaks GH stocks sneakers, shoes, slippers, caps, headwear and jackets — plus one-of-one customs built by hand. Everything checked in Osu before it ships. Pay on MoMo, bank transfer, or cash when it reaches you",
+  "heroLede": "CustomSneaks GH stocks sneakers, shoes, slippers, caps, headwear and jackets — plus one-of-one customs built by hand. Everything checked in Osu before it ships. Pay on MoMo, bank transfer, or cash when it reaches you.",
   "dropName": "Next drop",
   "dropSub": "Announced on WhatsApp first",
   "dropPairs": "—",
-  "dropAt": "",
   "deliveryNote": "We confirm your size on WhatsApp, then send MoMo or bank details. Same day in Accra and Tema, 48 hours to the regions. Cash on delivery inside Accra.",
   "footerNote": "Prices in GH₵",
   "ticker": [
@@ -21,5 +20,6 @@
     "Free delivery nationwide over GH₵5,000",
     "Cash on delivery inside Accra",
     "14-day returns, unworn"
-  ]
+  ],
+  "dropAt": ""
 }
