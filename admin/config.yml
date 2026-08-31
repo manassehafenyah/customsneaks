@@ -20,26 +20,26 @@ collections:
       - name: catalogue
         label: The vault
         file: data/products.json
-        description: Everything on the shop. Drag pairs to reorder — the top one shows first.
+        description: Everything on the shop. Drag items to reorder — the top one shows first.
         fields:
           - name: products
-            label: Pairs
-            label_singular: pair
+            label: Items
+            label_singular: item
             widget: list
             collapsed: true
             summary: "{{fields.name}} — {{fields.colorway}} · GH₵{{fields.price}}"
             fields:
 
               - name: name
-                label: Model
+                label: Item name
                 widget: string
-                hint: "Air Force 1 '07, Air Jordan 4 Retro…"
+                hint: "Air Force 1 '07, Nike Club Cap, Carhartt Detroit Jacket…"
 
               - name: colorway
-                label: Colorway
+                label: Colour / description
                 widget: string
                 required: false
-                hint: Triple White, Bred, Floral Denim…
+                hint: Triple White, Black on black, Washed denim…
 
               - name: price
                 label: Price (GH₵)
@@ -48,15 +48,23 @@ collections:
                 min: 0
                 hint: Digits only. The shop adds the GH₵ and the comma.
 
-              - name: sizes
-                label: Sizes available
+              - name: shoeSizes
+                label: Shoe sizes (US)
                 widget: select
                 multiple: true
                 required: false
-                hint: Tick every size you have. Untick one when it sells.
+                hint: For shoes, sneakers and slippers. Tick what you have; untick when a size sells.
                 options:
                   ["5","5.5","6","6.5","7","7.5","8","8.5","9","9.5",
                    "10","10.5","11","11.5","12","12.5","13","14"]
+
+              - name: apparelSizes
+                label: Clothing / cap sizes
+                widget: select
+                multiple: true
+                required: false
+                hint: For jackets, caps and headwear. Use "One size" for fitted-to-all items.
+                options: ["One size","XS","S","M","L","XL","2XL","3XL"]
 
               - name: images
                 label: Photos
@@ -75,13 +83,17 @@ collections:
               - name: category
                 label: Category
                 widget: select
-                default: custom
+                default: sneakers
                 options:
-                  - { label: Customs, value: custom }
-                  - { label: Air Force 1, value: af1 }
-                  - { label: Jordan, value: jordan }
-                  - { label: Dunk, value: dunk }
-                  - { label: Air Max, value: airmax }
+                  - { label: Sneakers, value: sneakers }
+                  - { label: Shoes, value: shoes }
+                  - { label: Slippers & slides, value: slippers }
+                  - { label: Caps, value: caps }
+                  - { label: Headwear, value: headwear }
+                  - { label: Jackets, value: jackets }
+                  - { label: Apparel, value: apparel }
+                  - { label: Accessories, value: accessories }
+                  - { label: Customs, value: customs }
                   - { label: Other, value: other }
 
               - name: visible

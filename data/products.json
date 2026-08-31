@@ -1,22 +1,3 @@
 {
-  "products": [
-    {
-      "name": "Rick Owens Jumbolace High-Top",
-      "colorway": "Black/Milk/Milk",
-      "price": 3049,
-      "sizes": [
-        "10"
-      ],
-      "images": [
-        "/assets/img/pasted-image-1788133623354.png",
-        "/assets/img/pasted-image-1788133750115.png",
-        "/assets/img/pasted-image-1788133772672.png"
-      ],
-      "video": "",
-      "category": "custom",
-      "visible": true,
-      "badge": "Grail",
-      "details": null
-    }
-  ]
+  "products": []
 }

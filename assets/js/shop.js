@@ -18,8 +18,11 @@ const SHOP = {
 };
 
 const CATEGORY_LABELS = {
-  custom: "Customs", af1: "Air Force 1", jordan: "Jordan",
-  dunk: "Dunk", airmax: "Air Max", other: "Other"
+  sneakers: "Sneakers", shoes: "Shoes", slippers: "Slippers & slides",
+  caps: "Caps", headwear: "Headwear", jackets: "Jackets",
+  apparel: "Apparel", accessories: "Accessories", customs: "Customs", other: "Other",
+  // categories from the earlier sneaker-only setup, so old entries still show
+  custom: "Customs", af1: "Air Force 1", jordan: "Jordan", dunk: "Dunk", airmax: "Air Max"
 };
 
 const slug = t => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -46,7 +49,9 @@ const PRODUCTS = (CATALOGUE.products || [])
       images,
       image: images[0] || "",
       video: strip(p.video),
-      sizes: (p.sizes || []).map(String)
+      // footwear and clothing sizes come from separate tick-lists;
+      // `sizes` is the older single list, kept so nothing breaks
+      sizes: [...(p.shoeSizes || []), ...(p.apparelSizes || []), ...(p.sizes || [])].map(String)
     };
   });
 
@@ -78,6 +83,7 @@ document.getElementById("footLine").textContent =
 
 const money = n => "GH₵" + n.toLocaleString("en-GH");
 const $ = s => document.querySelector(s);
+const sizeLabel = z => /^one size$/i.test(z) ? "One size" : "Size " + z;
 
 /* ---------- whatsapp + call ---------- */
 const waLink = msg => "https://wa.me/" + SHOP.whatsapp + "?text=" + encodeURIComponent(msg);
@@ -255,7 +261,7 @@ function drawCart(){
         <div class="line__thumb">${p.image ? '<img src="' + p.image + '" alt="">' : ''}</div>
         <div>
           <div class="line__name">${p.name}</div>
-          <div class="line__meta">${p.sub} · US ${c.size}</div>
+          <div class="line__meta">${p.sub} · ${sizeLabel(c.size)}</div>
           <button class="remove" data-remove="${i}">Remove</button>
         </div>
         <div class="line__price">${money(p.price)}</div>
@@ -269,7 +275,7 @@ function drawCart(){
   if (cart.length){
     const lines = cart.map((c,i) => {
       const p = PRODUCTS.find(x => x.id === c.id);
-      return (i+1) + ". " + p.name + " \"" + p.sub + "\" — US " + c.size + " — " + money(p.price) + " [" + p.code + "]";
+      return (i+1) + ". " + p.name + " \"" + p.sub + "\" — " + sizeLabel(c.size) + " — " + money(p.price) + (p.code ? " [" + p.code + "]" : "");
     });
     btn.textContent = "Order on WhatsApp";
     btn.href = waLink("Hi " + SHOP.name + ", I'd like to order:\n\n" + lines.join("\n") + "\n\nTotal: " + money(sum) + "\n\nName:\nDelivery area:");
@@ -301,7 +307,7 @@ $("#modalAdd").addEventListener("click", () => {
   if (!current || !pickedSize) return;
   cart.push({ id: current.id, size: pickedSize });
   drawCart();
-  toast(current.name + " · US " + pickedSize + " added");
+  toast(current.name + " · " + sizeLabel(pickedSize).toLowerCase() + " added");
   closeModal();
 });
 
