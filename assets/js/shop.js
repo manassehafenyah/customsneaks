@@ -69,6 +69,36 @@ document.querySelectorAll("[data-s]").forEach(el => {
 document.getElementById("footLine").textContent =
   "★ Built in Accra · © " + new Date().getFullYear() + " " + SETTINGS.shopName + " · " + SETTINGS.footerNote;
 
+/* home page clip — silent, looping, behind the headline */
+(() => {
+  const src = strip(SETTINGS.heroVideo);
+  if (!src) return;                                  // no clip, keep the plain background
+  const hero = document.querySelector(".hero");
+  const star = document.querySelector(".star-mark");
+  const still = strip(SETTINGS.heroPoster);
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const v = document.createElement("video");
+  v.className = "hero__clip";
+  v.muted = true;                                    // required for autoplay everywhere
+  v.defaultMuted = true;
+  v.loop = true;
+  v.playsInline = true;
+  v.setAttribute("playsinline", "");
+  v.setAttribute("aria-hidden", "true");
+  v.preload = "metadata";
+  if (still) v.poster = still;
+
+  // if the device asks for reduced motion and we have a still, show that instead
+  const holdStill = calm && still;
+  if (!holdStill) { v.autoplay = true; v.src = src; }
+
+  hero.classList.add("hero--clip");
+  if (star) star.remove();
+  hero.insertBefore(v, hero.firstChild);
+  if (!holdStill) v.play().catch(() => {});           // a refused autoplay just leaves the poster
+})();
+
 /* category filter buttons, for categories that have stock */
 (() => {
   const bar = document.getElementById("filters");
@@ -143,19 +173,50 @@ function mediaHTML(p){
   ];
   if (!slides.length) return '<div class="slot"><em>photo coming soon</em></div>';
 
-  const thumbs = slides.length > 1
+  const many = slides.length > 1;
+  const isClip = i => p.video && i === slides.length - 1;
+
+  const arrows = many
+    ? '<button class="navarrow navarrow--prev" data-step="-1" aria-label="Previous photo">‹</button>' +
+      '<button class="navarrow navarrow--next" data-step="1" aria-label="Next photo">›</button>'
+    : "";
+
+  const dots = many
+    ? '<div class="dots">' + slides.map((_, i) =>
+        '<button class="dot' + (i === 0 ? ' on' : '') + '" data-slide="' + i + '" aria-label="Photo ' + (i+1) + '"></button>'
+      ).join("") + '</div>'
+    : "";
+
+  const thumbs = many
     ? '<div class="thumbs">' + slides.map((_, i) =>
         '<button class="thumb' + (i === 0 ? ' on' : '') + '" data-slide="' + i + '" aria-label="View ' +
-        (p.video && i === slides.length - 1 ? 'clip' : 'photo ' + (i + 1)) + '">' +
-        (p.video && i === slides.length - 1
-          ? '<span class="thumb__play">▶</span>'
-          : '<img src="' + p.images[i] + '" alt="">') +
+        (isClip(i) ? 'clip' : 'photo ' + (i + 1)) + '">' +
+        (isClip(i) ? '<span class="thumb__play">▶</span>' : '<img src="' + p.images[i] + '" alt="">') +
         '</button>').join("") + '</div>'
     : "";
 
-  return '<div class="slides">' + slides.map((html, i) =>
-    '<div class="slide-wrap' + (i === 0 ? ' on' : '') + '">' + html + '</div>').join("") + '</div>' + thumbs;
+  return '<div class="slides">' +
+    slides.map((html, i) => '<div class="slide-wrap' + (i === 0 ? ' on' : '') + '">' + html + '</div>').join("") +
+    arrows + dots + '</div>' + thumbs;
 }
+
+/* ---------- gallery navigation ---------- */
+let slideAt = 0;
+
+function showSlide(i){
+  const shot = $("#modalShot");
+  const wraps = shot.querySelectorAll(".slide-wrap");
+  if (!wraps.length) return;
+  slideAt = (i + wraps.length) % wraps.length;
+  wraps.forEach((w, n) => w.classList.toggle("on", n === slideAt));
+  shot.querySelectorAll(".thumb").forEach((b, n) => b.classList.toggle("on", n === slideAt));
+  shot.querySelectorAll(".dot").forEach((b, n) => b.classList.toggle("on", n === slideAt));
+  const v = shot.querySelector("video");
+  if (v && !v.paused) v.pause();
+}
+
+const stepSlide = d => showSlide(slideAt + d);
+
 
 function render(){
   let list = PRODUCTS
@@ -169,7 +230,8 @@ function render(){
       : '<p class="empty">The vault is being restocked. New stock lands here shortly — message us on WhatsApp for what\'s in hand today.</p>';
     return; }
   grid.innerHTML = list.map(p => `
-    <article class="card">
+    <article class="card" data-open="${p.id}" tabindex="0" role="button"
+             aria-label="View ${p.name} ${p.sub}">
       <div class="card__shot">
         ${p.flag ? '<span class="chip card__flag">' + p.flag + '</span>' : ''}
         ${(p.images.length > 1 || p.video) ? '<span class="card__more">' + (p.video ? '▶ ' : '') + (p.images.length || 1) + '</span>' : ''}
@@ -182,7 +244,7 @@ function render(){
         <div class="sizes">${p.sizes.slice(0,6).map(s => '<span class="size">' + s + '</span>').join("")}${p.sizes.length > 6 ? '<span class="size">+' + (p.sizes.length-6) + '</span>' : ''}</div>
         <div class="card__foot">
           <span class="price">${money(p.price)}</span>
-          <button class="link-btn" data-open="${p.id}">Select size</button>
+          <span class="link-btn">Select size</span>
         </div>
       </div>
     </article>`).join("");
@@ -210,12 +272,17 @@ function openModal(id){
   if (!p) return;
   current = p; pickedSize = null; lastFocus = document.activeElement;
   $("#modalShot").innerHTML = mediaHTML(p);
+  slideAt = 0;
   $("#modalFamily").textContent = p.fam;
   $("#modalName").textContent = p.name;
   $("#modalSub").textContent = p.sub;
-  $("#modalCode").textContent = p.code;
-  $("#modalCond").textContent = p.cond;
-  $("#modalYear").textContent = p.year;
+  const spec = (el, value) => {
+    $(el).textContent = value || "";
+    $(el).closest(".spec").hidden = !value;      // no value, no row
+  };
+  spec("#modalCode", p.code);
+  spec("#modalCond", p.cond);
+  spec("#modalYear", p.year);
   $("#modalPrice").textContent = money(p.price);
   $("#modalSizes").innerHTML = p.sizes.map(s => '<button class="size size--pick" data-size="' + s + '" aria-pressed="false">' + s + '</button>').join("");
   $("#modalAdd").disabled = true;
@@ -227,6 +294,13 @@ function openModal(id){
 $("#grid").addEventListener("click", e => {
   const b = e.target.closest("[data-open]");
   if (b) openModal(b.dataset.open);
+});
+$("#grid").addEventListener("keydown", e => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const b = e.target.closest("[data-open]");
+  if (!b) return;
+  e.preventDefault();
+  openModal(b.dataset.open);
 });
 $("#modalSizes").addEventListener("click", e => {
   const b = e.target.closest(".size--pick");
@@ -243,14 +317,26 @@ function closeModal(){
   if (lastFocus) lastFocus.focus();
 }
 $("#modalShot").addEventListener("click", e => {
-  const t = e.target.closest(".thumb");
-  if (!t) return;
-  const i = Number(t.dataset.slide);
-  $("#modalShot").querySelectorAll(".slide-wrap").forEach((w, n) => w.classList.toggle("on", n === i));
-  $("#modalShot").querySelectorAll(".thumb").forEach((b, n) => b.classList.toggle("on", n === i));
-  const v = $("#modalShot").querySelector("video");
-  if (v && !v.paused) v.pause();
+  const arrow = e.target.closest("[data-step]");
+  if (arrow) return stepSlide(Number(arrow.dataset.step));
+  const pick = e.target.closest("[data-slide]");
+  if (pick) showSlide(Number(pick.dataset.slide));
 });
+
+/* swipe on touch, ignoring the video so its controls still work */
+(() => {
+  let x0 = null;
+  const shot = $("#modalShot");
+  shot.addEventListener("touchstart", e => {
+    x0 = e.target.closest("video") ? null : e.changedTouches[0].clientX;
+  }, { passive: true });
+  shot.addEventListener("touchend", e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 45) stepSlide(dx < 0 ? 1 : -1);
+    x0 = null;
+  }, { passive: true });
+})();
 
 $("#closeModal").addEventListener("click", closeModal);
 
@@ -335,7 +421,10 @@ $("#cartBtn").addEventListener("click", openCart);
 $("#closeCart").addEventListener("click", closeCart);
 $("#scrim").addEventListener("click", () => { closeModal(); closeCart(); });
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape"){ closeModal(); closeCart(); }
+  if (e.key === "Escape"){ closeModal(); closeCart(); return; }
+  if (!$("#modal").classList.contains("on")) return;
+  if (e.key === "ArrowLeft")  stepSlide(-1);
+  if (e.key === "ArrowRight") stepSlide(1);
 });
 
 

@@ -269,12 +269,19 @@ a{color:inherit;text-decoration:none}
   display:flex;flex-direction:column;
   transition:border-color .15s ease, transform .15s ease;
 }
+.card{cursor:pointer}
 .card:hover{border-color:var(--ink);transform:translateY(-3px)}
+.card:hover .link-btn{color:var(--hi)}
+.card:focus-visible{outline:2px solid var(--hi);outline-offset:3px}
 .card__shot{
   position:relative;aspect-ratio:4/3;background:var(--surface-2);
   display:grid;place-items:center;overflow:hidden;
 }
-.card__shot img{width:100%;height:100%;object-fit:cover}
+.card__shot img{
+  width:100%;height:100%;
+  object-fit:contain;          /* never crop a product photo */
+  padding:.5rem;
+}
 .slot{
   position:absolute;inset:0;
   display:grid;place-items:center;gap:.4rem;align-content:center;
@@ -303,7 +310,7 @@ a{color:inherit;text-decoration:none}
 .size--pick[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
 .card__foot{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-top:auto;padding-top:.65rem;border-top:1px solid var(--line)}
 .price{font-family:"JetBrains Mono",monospace;font-size:1.05rem;font-weight:700;font-variant-numeric:tabular-nums}
-.link-btn{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-bottom:2px solid var(--gold);padding-bottom:2px}
+.link-btn{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-bottom:2px solid var(--gold);padding-bottom:2px}
 .empty{padding:3rem 1rem;text-align:center;color:var(--ash);grid-column:1/-1}
 
 /* ---------- verify band ---------- */
@@ -425,8 +432,8 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;background:var(--surfac
 .slides{position:relative;flex:1;min-height:260px}
 .slide-wrap{position:absolute;inset:0;display:none}
 .slide-wrap.on{display:block}
-.slide{width:100%;height:100%;object-fit:cover;display:block;background:#000}
-video.slide{object-fit:contain}
+.slide{width:100%;height:100%;object-fit:contain;display:block;background:var(--surface-2)}
+video.slide{background:#000}
 
 .thumbs{display:flex;gap:.4rem;padding:.5rem;background:var(--surface);border-top:1px solid var(--line);overflow-x:auto}
 .thumb{
@@ -434,7 +441,7 @@ video.slide{object-fit:contain}
   overflow:hidden;background:var(--surface-2);cursor:pointer;display:grid;place-items:center;
 }
 .thumb.on{border-color:var(--gold);border-width:2px}
-.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb img{width:100%;height:100%;object-fit:contain;padding:2px}
 .thumb__play{font-size:.8rem;color:var(--ink)}
 
 /* how many photos a card has */
@@ -442,4 +449,66 @@ video.slide{object-fit:contain}
   position:absolute;top:.6rem;right:.6rem;z-index:2;
   font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.08em;
   background:rgba(10,10,10,.72);color:#FBF7EC;padding:.2rem .4rem;border-radius:2px;
+}
+
+/* ---------- gallery navigation ---------- */
+.navarrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(10,10,10,.55);color:#FBF7EC;
+  font-size:1.5rem;line-height:1;display:grid;place-items:center;
+  cursor:pointer;transition:background .15s ease;
+  padding:0 0 3px;
+}
+.navarrow:hover{background:rgba(10,10,10,.8)}
+.navarrow--prev{left:.6rem}
+.navarrow--next{right:.6rem}
+
+.dots{
+  position:absolute;left:0;right:0;bottom:.7rem;z-index:3;
+  display:flex;justify-content:center;gap:.35rem;
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;padding:0;cursor:pointer;
+  background:rgba(251,247,236,.45);box-shadow:0 0 0 1px rgba(10,10,10,.35);
+  transition:background .15s ease, transform .15s ease;
+}
+.dot.on{background:var(--gold);transform:scale(1.25)}
+
+@media (max-width:700px){
+  .navarrow{width:34px;height:34px;font-size:1.3rem}
+  .thumbs{display:none}          /* dots and swipe are enough on a phone */
+}
+
+/* ---------- home page clip ---------- */
+.hero__clip{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;z-index:0;pointer-events:none;
+}
+/* with footage behind it the hero commits to a dark treatment in both
+   themes — light text over a scrim always reads, dark text never would */
+.hero--clip::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(10,10,10,.92) 0%, rgba(10,10,10,.72) 45%, rgba(10,10,10,.45) 100%),
+    linear-gradient(0deg,  rgba(10,10,10,.85) 0%, rgba(10,10,10,.15) 55%);
+}
+.hero--clip .hero__grid{position:relative;z-index:2}
+.hero--clip .hero h1,
+.hero--clip h1{color:#FBF7EC}
+.hero--clip h1 .line2{color:var(--gold)}
+.hero--clip .lede{color:#D8D2C4}
+.hero--clip .eyebrow{color:#B8B1A2}
+.hero--clip .eyebrow::before{background:var(--gold)}
+.hero--clip .btn--ghost{background:transparent;border-color:rgba(251,247,236,.45);color:#FBF7EC}
+.hero--clip .btn--ghost:hover{border-color:#FBF7EC}
+.hero--clip .drop{background:rgba(20,18,14,.82);border-color:rgba(251,247,236,.18);backdrop-filter:blur(6px)}
+.hero--clip .drop__name{color:#FBF7EC}
+.hero--clip .drop__sub,
+.hero--clip .drop .mono{color:#B8B1A2}
+.hero--clip .clock div{background:rgba(251,247,236,.10)}
+.hero--clip .clock b{color:#FBF7EC}
+.hero--clip .clock small{color:#B8B1A2}
+@media (max-width:940px){
+  .hero--clip::after{background:linear-gradient(0deg,rgba(10,10,10,.9) 0%,rgba(10,10,10,.6) 100%)}
 }

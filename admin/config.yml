@@ -131,6 +131,22 @@ collections:
             widget: string
             pattern: ['^[0-9]{9,15}$', 'Digits only with country code — e.g. 233244906925']
           - { name: phone, label: Phone number (for calls), widget: string }
+          - name: heroVideo
+            label: Home page clip
+            widget: file
+            required: false
+            media_library: { config: { max_file_size: 8388608 } }
+            hint: >-
+              Optional. Plays silently on a loop behind the headline when someone
+              opens the shop. MP4, 5-15 seconds, under 8 MB — it downloads on every
+              visit, so keep it small. Leave empty for the plain background.
+
+          - name: heroPoster
+            label: Clip still image
+            widget: image
+            required: false
+            hint: Shown while the clip loads, and instead of it on slow phones. Use a frame from the clip.
+
           - { name: heroEyebrow, label: Small line above the headline, widget: string }
           - { name: heroLine1, label: Headline — first line, widget: string }
           - { name: heroLine2, label: Headline — coloured line, widget: string }
