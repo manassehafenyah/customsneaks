@@ -3,6 +3,8 @@
   "tagline": "Sneakers, streetwear and customs — Accra",
   "whatsapp": "233244906925",
   "phone": "+233 24 490 6925",
+  "heroVideo": "/assets/img/Rick_Owens_Jumbo_High_Top_Text_Removed.mp4",
+  "heroPoster": "",
   "heroEyebrow": "Osu, Accra · delivered to all 16 regions",
   "heroLine1": "Grails only.",
   "heroLine2": "No fakes.",
@@ -10,6 +12,7 @@
   "dropName": "Next drop",
   "dropSub": "Announced on WhatsApp first",
   "dropPairs": "—",
+  "dropAt": "",
   "deliveryNote": "We confirm your size on WhatsApp, then send MoMo or bank details. Same day in Accra and Tema, 48 hours to the regions. Cash on delivery inside Accra.",
   "footerNote": "Prices in GH₵",
   "ticker": [
@@ -20,6 +23,5 @@
     "Free delivery nationwide over GH₵5,000",
     "Cash on delivery inside Accra",
     "14-day returns, unworn"
-  ],
-  "dropAt": ""
+  ]
 }
