@@ -10,6 +10,9 @@
   --red:#CE1126;
   --red-ink:#FFFFFF;
   --green:#006B3F;
+  --green-ink:#FFFFFF;
+  --warm:#C0341C;
+  --brand-b:#0A0A0A;
   --hi:#CE1126;
   --shadow:0 1px 0 rgba(10,10,10,.06), 0 12px 28px -18px rgba(10,10,10,.5);
   --radius:3px;
@@ -28,6 +31,14 @@
     --red:#E8404F;
     --red-ink:#1A0406;
     --green:#12A164;
+  --green-ink:#04240F;
+  --warm:#E8563A;
+  --brand-b:#FCD116;
+    --green-ink:#04240F;
+  --warm:#E8563A;
+  --brand-b:#FCD116;
+    --warm:#E8563A;
+    --brand-b:#FCD116;
     --hi:#FCD116;
     --shadow:0 1px 0 rgba(255,255,255,.05), 0 18px 34px -22px rgba(0,0,0,.9);
   }
@@ -44,6 +55,9 @@
   --red:#E8404F;
   --red-ink:#1A0406;
   --green:#12A164;
+  --green-ink:#04240F;
+  --warm:#E8563A;
+  --brand-b:#FCD116;
   --hi:#FCD116;
   --shadow:0 1px 0 rgba(255,255,255,.05), 0 18px 34px -22px rgba(0,0,0,.9);
 }
@@ -104,6 +118,7 @@ a{color:inherit;text-decoration:none}
 }
 .nav__in{display:flex;align-items:center;gap:1.75rem;height:66px}
 .brand{
+  color:var(--warm);
   font-family:"Anton",Impact,sans-serif;
   font-weight:900;
   font-size:1.9rem;
@@ -112,11 +127,11 @@ a{color:inherit;text-decoration:none}
   text-transform:uppercase;
   display:flex;align-items:baseline;gap:.3rem;
 }
-.brand em{font-style:normal;color:var(--hi)}
+.brand em{font-style:normal;color:var(--brand-b)}
 .brand .gh{
   font-family:"JetBrains Mono",ui-monospace,monospace;
   font-size:.5em;font-weight:700;letter-spacing:.1em;
-  background:var(--red);color:var(--red-ink);
+  background:var(--green);color:var(--green-ink);
   padding:.12em .35em;border-radius:2px;align-self:center;
 }
 .nav__links{display:flex;gap:1.4rem;margin-left:auto;font-size:.82rem;font-weight:600;letter-spacing:.02em}
@@ -223,7 +238,7 @@ a{color:inherit;text-decoration:none}
   font-family:"JetBrains Mono",monospace;
   font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
   padding:.28rem .5rem;border-radius:2px;
-  background:var(--red);color:var(--red-ink);font-weight:700;
+  background:var(--green);color:var(--green-ink);font-weight:700;
 }
 .drop__name{font-family:"Anton",Impact,sans-serif;font-size:1.9rem;font-weight:800;line-height:1;text-transform:uppercase;margin:0 0 .15rem}
 .drop__sub{color:var(--ash);font-size:.85rem;margin:0 0 1.1rem}
@@ -399,11 +414,6 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0;background:var(--surfac
 .spec b{color:var(--ink);font-weight:500}
 @media (max-width:700px){ .modal__grid{grid-template-columns:1fr} .modal__shot{min-height:200px} }
 
-/* ---------- flag rail ----------
-   Three equal bars, the proportions of the flag itself. */
-.flag{height:13px;background:linear-gradient(
-  #CE1126 0 33.34%, #FCD116 33.34% 66.67%, #006B3F 66.67% 100%);}
-.flag--thin{height:7px}
 
 /* ---------- adinkra ---------- */
 .mark{width:54px;height:54px;color:var(--gold);margin-bottom:1rem}
