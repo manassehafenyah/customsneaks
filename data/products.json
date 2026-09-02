@@ -21,6 +21,29 @@
         "styleCode": "Above-ankle luxury sneaker",
         "year": "2024"
       }
+    },
+    {
+      "name": "Vans Old Skool 36 LX \"Souvenir\"",
+      "colorway": "Burgundy — spray-painted upper, tweed sidestripe, Souvenir pins",
+      "price": 585,
+      "shoeSizes": [
+        "9.5"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/vans-style36-1.jpg",
+        "/assets/img/vans-style36-2.jpg",
+        "/assets/img/vans-style36-3.jpg"
+      ],
+      "video": "/assets/img/vans-style36-turntable.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "Grail",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "VN000D9RBRG",
+        "year": "2025"
+      }
     }
   ]
 }
