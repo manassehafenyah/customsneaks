@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CustomSneaks GH">
+  <defs>
+    <mask id="cs-star">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M32.00 15.50 36.06 26.42 47.69 26.90 38.56 34.13 41.70 45.35 32.00 38.90 22.30 45.35 25.44 34.13 16.31 26.90 27.94 26.42 Z" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="#C0341C" mask="url(#cs-star)"/>
+</svg>

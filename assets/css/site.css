@@ -128,6 +128,9 @@ a{color:inherit;text-decoration:none}
   display:flex;align-items:baseline;gap:.3rem;
 }
 .brand em{font-style:normal;color:var(--brand-b)}
+/* the illustration carries its own disc, so it needs no container */
+.brand__mark{width:1.55em;height:1.55em;align-self:center;flex:none;margin-right:.15em}
+@media (max-width:520px){ .nav .brand__mark{width:1.15em;height:1.15em} }
 .brand .gh{
   font-family:"JetBrains Mono",ui-monospace,monospace;
   font-size:.5em;font-weight:700;letter-spacing:.1em;
