@@ -116,6 +116,7 @@ document.getElementById("footLine").textContent =
 
 const money = n => "GH₵" + n.toLocaleString("en-GH");
 const $ = s => document.querySelector(s);
+const calmMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sizeLabel = z => /^one size$/i.test(z) ? "One size" : "Size " + z;
 
 /* ---------- whatsapp + call ---------- */
@@ -169,7 +170,7 @@ function shotHTML(p){
 function mediaHTML(p){
   const slides = [
     ...p.images.map(src => '<img class="slide" src="' + src + '" alt="' + p.name + ' ' + p.sub + '">'),
-    ...(p.video ? ['<video class="slide" src="' + p.video + '" controls playsinline preload="metadata"></video>'] : [])
+    ...(p.video ? ['<video class="slide" src="' + p.video + '" controls muted loop playsinline preload="metadata"></video>'] : [])
   ];
   if (!slides.length) return '<div class="slot"><em>photo coming soon</em></div>';
 
@@ -211,8 +212,13 @@ function showSlide(i){
   wraps.forEach((w, n) => w.classList.toggle("on", n === slideAt));
   shot.querySelectorAll(".thumb").forEach((b, n) => b.classList.toggle("on", n === slideAt));
   shot.querySelectorAll(".dot").forEach((b, n) => b.classList.toggle("on", n === slideAt));
-  const v = shot.querySelector("video");
-  if (v && !v.paused) v.pause();
+  shot.querySelectorAll("video").forEach(v => { if (!v.paused) v.pause(); });
+  const clip = shot.querySelector(".slide-wrap.on video");
+  if (clip && !calmMotion) {
+    clip.muted = true;                 // browsers only autoplay silent video
+    clip.currentTime = 0;
+    clip.play().catch(() => {});       // refused autoplay just leaves the controls
+  }
 }
 
 const stepSlide = d => showSlide(slideAt + d);
