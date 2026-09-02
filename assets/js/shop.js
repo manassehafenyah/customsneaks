@@ -117,7 +117,27 @@ document.getElementById("footLine").textContent =
 const money = n => "GH₵" + n.toLocaleString("en-GH");
 const $ = s => document.querySelector(s);
 const calmMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const sizeLabel = z => /^one size$/i.test(z) ? "One size" : "Size " + z;
+/* US → [EU, UK], men's. The chart Nike, Vans and most brands print on the box.
+   Keyed on the US number, which is what the admin stores — so nothing in
+   data/products.json has to change. */
+const SIZE_CHART = {
+  "5":["37.5","4.5"], "5.5":["38","5"],    "6":["38.5","5.5"], "6.5":["39","6"],
+  "7":["40","6"],     "7.5":["40.5","6.5"],"8":["41","7"],     "8.5":["42","7.5"],
+  "9":["42.5","8"],   "9.5":["43","8.5"],  "10":["44","9"],    "10.5":["44.5","9.5"],
+  "11":["45","10"],   "11.5":["45.5","10.5"],"12":["46","11"], "12.5":["47","11.5"],
+  "13":["47.5","12"], "13.5":["48","12.5"],"14":["48.5","13"]
+};
+const conv = z => SIZE_CHART[String(z).trim()];
+
+/* full form — cart lines and the WhatsApp order */
+const sizeLabel = z => {
+  if (/^one size$/i.test(z)) return "One size";
+  const c = conv(z);
+  return c ? "US " + z + " · EU " + c[0] + " · UK " + c[1] : "Size " + z;
+};
+/* short form — the toast, where the full string is too long */
+const sizeShort = z =>
+  /^one size$/i.test(z) ? "one size" : (conv(z) ? "US " + z : "size " + z);
 
 /* ---------- whatsapp + call ---------- */
 const waLink = msg => "https://wa.me/" + SHOP.whatsapp + "?text=" + encodeURIComponent(msg);
@@ -247,7 +267,7 @@ function render(){
         <div class="card__code"><span>${p.code}</span><span>${p.cond}</span></div>
         <h3 class="card__name">${p.name}</h3>
         <p class="card__sub">${p.sub}</p>
-        <div class="sizes">${p.sizes.slice(0,6).map(s => '<span class="size">' + s + '</span>').join("")}${p.sizes.length > 6 ? '<span class="size">+' + (p.sizes.length-6) + '</span>' : ''}</div>
+        <div class="sizes">${p.sizes.slice(0,6).map(s => '<span class="size">' + (conv(s) ? "US " + s : s) + '</span>').join("")}${p.sizes.length > 6 ? '<span class="size">+' + (p.sizes.length-6) + '</span>' : ''}</div>
         <div class="card__foot">
           <span class="price">${money(p.price)}</span>
           <span class="link-btn">Select size</span>
@@ -290,7 +310,15 @@ function openModal(id){
   spec("#modalCond", p.cond);
   spec("#modalYear", p.year);
   $("#modalPrice").textContent = money(p.price);
-  $("#modalSizes").innerHTML = p.sizes.map(s => '<button class="size size--pick" data-size="' + s + '" aria-pressed="false">' + s + '</button>').join("");
+  $("#modalSizes").innerHTML = p.sizes.map(s => {
+    const c = conv(s);
+    return '<button class="size size--pick" data-size="' + s + '" aria-pressed="false">'
+         + (c ? '<b>US ' + s + '</b><small>EU ' + c[0] + ' &middot; UK ' + c[1] + '</small>'
+              : '<b>' + s + '</b>')
+         + '</button>';
+  }).join("");
+  /* only worth explaining the three numbers when there are three numbers */
+  $("#sizeNote").hidden = !p.sizes.some(conv);
   $("#modalAdd").disabled = true;
   $("#modalAsk").href = waLink("Hi " + SHOP.name + ", is the " + p.name + " \"" + p.sub + "\" (" + p.code + ") still available? Sizes I need: ");
   $("#modal").classList.add("on");
@@ -408,7 +436,7 @@ function toast(msg){
 
 $("#modalAdd").addEventListener("click", () => {
   if (!current || !pickedSize) return;
-  const added = current.name + " · " + sizeLabel(pickedSize).toLowerCase() + " added";
+  const added = current.name + " · " + sizeShort(pickedSize) + " added";
   cart.push({ id: current.id, size: pickedSize });
   // the panel must close even if drawing the cart hits a problem, otherwise
   // the dark overlay stays up and the page looks frozen
