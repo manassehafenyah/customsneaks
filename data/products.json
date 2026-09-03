@@ -276,6 +276,25 @@
         "styleCode": "IQ1106-220",
         "year": "2026"
       }
+    },
+    {
+      "name": "Nike Air Force 1 Low x Cactus Plant Flea Market",
+      "colorway": "Nike Air Force 1 Low x Cactus Plant Flea Market",
+      "price": 1149,
+      "shoeSizes": [
+        "10"
+      ],
+      "apparelSizes": [],
+      "images": [],
+      "video": "/assets/img/af1-cpfm-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "FQ7069-300",
+        "year": "2024"
+      }
     }
   ]
 }
