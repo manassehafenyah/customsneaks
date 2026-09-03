@@ -209,6 +209,51 @@
         "styleCode": "CZ8065-100",
         "year": "2025"
       }
+    },
+    {
+      "name": "Louis Vuitton LV Trainer",
+      "colorway": "Green Khaki / studded, grained calf leather",
+      "price": 3949,
+      "shoeSizes": [
+        "10"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/IMG_5409_530x@2x.png",
+        "/assets/img/IMG_5406_1024x1024@2x.png",
+        "/assets/img/IMG_5408_1024x1024@2x.png"
+      ],
+      "video": "/assets/img/lv-trainer-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "",
+        "year": ""
+      }
+    },
+    {
+      "name": "Timberland 6-Inch Premium Waterproof Boot",
+      "colorway": "Wheat Nubuck / the classic 10061",
+      "price": 949,
+      "shoeSizes": [
+        "8.5"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788406154969.png",
+        "/assets/img/pasted-image-1788406167704.png"
+      ],
+      "video": "/assets/img/timberland-wheat-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "TB010061713",
+        "year": ""
+      }
     }
   ]
 }
