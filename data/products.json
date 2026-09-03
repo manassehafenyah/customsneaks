@@ -317,6 +317,26 @@
       "visible": true,
       "badge": "1 of 1",
       "details": null
+    },
+    {
+      "name": "Central Cee x Nike Air Force 1 Low \"Dark Beetroot\"",
+      "colorway": "Dark Beetroot patent / gold Syna World and 13 branding",
+      "price": 1049,
+      "shoeSizes": [
+        "9.5"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788409720816.png",
+        "/assets/img/pasted-image-1788409734565.png",
+        "/assets/img/pasted-image-1788409747655.png",
+        "/assets/img/pasted-image-1788409762231.png"
+      ],
+      "video": "/assets/img/af1-centralcee-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "",
+      "details": null
     }
   ]
 }
