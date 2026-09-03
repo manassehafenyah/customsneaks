@@ -161,6 +161,30 @@
         "styleCode": "",
         "year": "2022"
       }
+    },
+    {
+      "name": "Nike Air Force 1 Low \"Egg or Duck\"",
+      "colorway": "White x Gorge Green / Ducks of a Feather, Oregon PE",
+      "price": 1489,
+      "shoeSizes": [
+        "9.5"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788404030985.png",
+        "/assets/img/pasted-image-1788404038963.png",
+        "/assets/img/pasted-image-1788404054285.png",
+        "/assets/img/pasted-image-1788404081737.png"
+      ],
+      "video": "/assets/img/af1-duckegg-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "1 of 1",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "IU7613-100",
+        "year": "2025"
+      }
     }
   ]
 }
