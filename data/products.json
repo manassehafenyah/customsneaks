@@ -92,6 +92,29 @@
         "styleCode": "RU01B1890",
         "year": "2013"
       }
+    },
+    {
+      "name": "Nike Air Force 1 Low Premium",
+      "colorway": "Green patent leather / Safety Orange Swoosh and outsole",
+      "price": 1049,
+      "shoeSizes": [
+        "8.5"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788401839766.png",
+        "/assets/img/pasted-image-1788402142344.png",
+        "/assets/img/pasted-image-1788402037543.png"
+      ],
+      "video": "/assets/img/af1-oilgreen-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "HJ9118-386",
+        "year": "2024"
+      }
     }
   ]
 }
