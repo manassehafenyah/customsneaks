@@ -285,7 +285,10 @@
         "10"
       ],
       "apparelSizes": [],
-      "images": [],
+      "images": [
+        "/assets/img/pasted-image-1788409284361.png",
+        "/assets/img/pasted-image-1788409300026.png"
+      ],
       "video": "/assets/img/af1-cpfm-branded.mp4",
       "category": "sneakers",
       "visible": true,
