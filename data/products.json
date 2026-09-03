@@ -295,6 +295,25 @@
         "styleCode": "FQ7069-300",
         "year": "2024"
       }
+    },
+    {
+      "name": "Air Force 1 Low — \"Skull\" custom",
+      "colorway": "Hand-painted rust and black, sculpted skull toe, 1 of 1",
+      "price": 1249,
+      "shoeSizes": [
+        "8.5"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788408778017.png",
+        "/assets/img/pasted-image-1788408854702.png",
+        "/assets/img/pasted-image-1788408919001.png"
+      ],
+      "video": "/assets/img/af1-skull-custom-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "1 of 1",
+      "details": null
     }
   ]
 }
