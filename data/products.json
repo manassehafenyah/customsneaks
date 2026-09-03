@@ -138,6 +138,29 @@
         "styleCode": "",
         "year": ""
       }
+    },
+    {
+      "name": "Nike Air Zoom SuperRep 3",
+      "colorway": "Black x White / visible Zoom Air unit",
+      "price": 779,
+      "shoeSizes": [
+        "9.5"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/nike-superrep-1.jpg",
+        "/assets/img/nike-superrep-2.jpg",
+        "/assets/img/pasted-image-1788403624062.png"
+      ],
+      "video": "/assets/img/nike-superrep-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "",
+        "year": "2022"
+      }
     }
   ]
 }
