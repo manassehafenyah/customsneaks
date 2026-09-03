@@ -254,6 +254,28 @@
         "styleCode": "TB010061713",
         "year": ""
       }
+    },
+    {
+      "name": "Air Jordan 1 Low Method of Make v3 \"Year of the Horse\"",
+      "colorway": "Light Chocolate x Sail / pony hair, gold CNY charm",
+      "price": 1149,
+      "shoeSizes": [
+        "10"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788407845079.png",
+        "/assets/img/pasted-image-1788407878887.png"
+      ],
+      "video": "/assets/img/aj1-yearofthehorse-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "IQ1106-220",
+        "year": "2026"
+      }
     }
   ]
 }
