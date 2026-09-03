@@ -115,6 +115,29 @@
         "styleCode": "HJ9118-386",
         "year": "2024"
       }
+    },
+    {
+      "name": "Chrome Hearts x Timberland 6-Inch Boot",
+      "colorway": "Black nubuck / red cross patches, dagger hardware",
+      "price": 3549,
+      "shoeSizes": [
+        "10"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/chromehearts-timb-1_1.jpg",
+        "/assets/img/chromehearts-timb-2.jpg",
+        "/assets/img/pasted-image-1788402911807.png"
+      ],
+      "video": "/assets/img/chromehearts-timberland-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "1 of 1",
+      "details": {
+        "condition": "New",
+        "styleCode": "",
+        "year": ""
+      }
     }
   ]
 }
