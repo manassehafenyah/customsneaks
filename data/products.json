@@ -44,6 +44,32 @@
         "styleCode": "VN000D9RBRG",
         "year": "2025"
       }
+    },
+    {
+      "name": "adidas Yeezy Boost 350 V2 \"Earth\"",
+      "colorway": "Dark khaki / monochrome Primeknit, textile heel tab (a.k.a. Marsh)",
+      "price": 639,
+      "shoeSizes": [
+        "8.5",
+        "9.5",
+        "10",
+        "11"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788397976178.png",
+        "/assets/img/pasted-image-1788397991051.png",
+        "/assets/img/pasted-image-1788398003425.png"
+      ],
+      "video": "/assets/img/yeezy-earth-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "FX9033",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "FX9033",
+        "year": "2020"
+      }
     }
   ]
 }
