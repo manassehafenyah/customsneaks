@@ -185,6 +185,30 @@
         "styleCode": "IU7613-100",
         "year": "2025"
       }
+    },
+    {
+      "name": "Chrome Hearts × NOCTA × Nike Air Force 1",
+      "colorway": "white AF1s fitted with Chrome Hearts-style silver hardware",
+      "price": 1849,
+      "shoeSizes": [
+        "9.5"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788405023194.png",
+        "/assets/img/pasted-image-1788405107620.png",
+        "/assets/img/pasted-image-1788405228942.png",
+        "/assets/img/pasted-image-1788405275132.png"
+      ],
+      "video": "/assets/img/af1-chromehearts-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "1 of 1",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "CZ8065-100",
+        "year": "2025"
+      }
     }
   ]
 }
