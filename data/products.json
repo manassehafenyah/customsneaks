@@ -70,6 +70,27 @@
         "styleCode": "FX9033",
         "year": "2020"
       }
+    },
+    {
+      "name": "Rick Owens Ramones High Top",
+      "colorway": "Oxblood / Milk — leather, side zip",
+      "price": 3949,
+      "shoeSizes": [
+        "10"
+      ],
+      "apparelSizes": [],
+      "images": [
+        "/assets/img/pasted-image-1788400762217.png"
+      ],
+      "video": "/assets/img/rickowens-ramones-branded.mp4",
+      "category": "sneakers",
+      "visible": true,
+      "badge": "Grail",
+      "details": {
+        "condition": "Deadstock",
+        "styleCode": "RU01B1890",
+        "year": "2013"
+      }
     }
   ]
 }
